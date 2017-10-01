@@ -1,0 +1,7 @@
+E:\projects\VS\DirectX9Demo\DirectX9Demo\bin\Debug\DirectX9Demo.exe
+E:\projects\VS\DirectX9Demo\DirectX9Demo\bin\Debug\DirectX9Demo.pdb
+E:\projects\VS\DirectX9Demo\DirectX9Demo\obj\Debug\DirectX9Demo.Form1.resources
+E:\projects\VS\DirectX9Demo\DirectX9Demo\obj\Debug\DirectX9Demo.Properties.Resources.resources
+E:\projects\VS\DirectX9Demo\DirectX9Demo\obj\Debug\DirectX9Demo.csproj.GenerateResource.Cache
+E:\projects\VS\DirectX9Demo\DirectX9Demo\obj\Debug\DirectX9Demo.exe
+E:\projects\VS\DirectX9Demo\DirectX9Demo\obj\Debug\DirectX9Demo.pdb
