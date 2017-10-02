@@ -33,6 +33,8 @@
             this.toolStripMenuItem_File_Open = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog_XFile = new System.Windows.Forms.OpenFileDialog();
             this.panel_Disp = new System.Windows.Forms.Panel();
+            this.label_ViewAngleX = new System.Windows.Forms.Label();
+            this.label_ViewAngleY = new System.Windows.Forms.Label();
             this.menuStrip_Main.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,23 +70,45 @@
             // panel_Disp
             // 
             this.panel_Disp.BackColor = System.Drawing.Color.White;
-            this.panel_Disp.Location = new System.Drawing.Point(13, 29);
+            this.panel_Disp.Location = new System.Drawing.Point(245, 29);
             this.panel_Disp.Name = "panel_Disp";
-            this.panel_Disp.Size = new System.Drawing.Size(759, 520);
+            this.panel_Disp.Size = new System.Drawing.Size(527, 520);
             this.panel_Disp.TabIndex = 1;
             this.panel_Disp.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Panel_MouseMove);
+            // 
+            // label_ViewAngleX
+            // 
+            this.label_ViewAngleX.AutoSize = true;
+            this.label_ViewAngleX.Location = new System.Drawing.Point(13, 41);
+            this.label_ViewAngleX.Name = "label_ViewAngleX";
+            this.label_ViewAngleX.Size = new System.Drawing.Size(65, 12);
+            this.label_ViewAngleX.TabIndex = 2;
+            this.label_ViewAngleX.Text = "ViewAngleX";
+            // 
+            // label_ViewAngleY
+            // 
+            this.label_ViewAngleY.AutoSize = true;
+            this.label_ViewAngleY.Location = new System.Drawing.Point(13, 63);
+            this.label_ViewAngleY.Name = "label_ViewAngleY";
+            this.label_ViewAngleY.Size = new System.Drawing.Size(65, 12);
+            this.label_ViewAngleY.TabIndex = 3;
+            this.label_ViewAngleY.Text = "ViewAngleY";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.label_ViewAngleY);
+            this.Controls.Add(this.label_ViewAngleX);
             this.Controls.Add(this.panel_Disp);
             this.Controls.Add(this.menuStrip_Main);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip_Main;
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "X Static Viewer";
+            this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             this.menuStrip_Main.ResumeLayout(false);
             this.menuStrip_Main.PerformLayout();
             this.ResumeLayout(false);
@@ -99,6 +123,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_File_Open;
         private System.Windows.Forms.OpenFileDialog openFileDialog_XFile;
         private System.Windows.Forms.Panel panel_Disp;
+        private System.Windows.Forms.Label label_ViewAngleX;
+        private System.Windows.Forms.Label label_ViewAngleY;
     }
 }
 

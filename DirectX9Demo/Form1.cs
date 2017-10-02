@@ -18,6 +18,7 @@ namespace DirectX9Demo
         Device XDevice = null;// X显示设备
         Material[] XObjectMeshMaterials;// X文件材质
         Texture[] XObjectMeshTextures;// X文件纹理
+        string XObjectFilePath;
         float ViewPositionX = -400;// 摄像机X轴位置
         float ViewPositionY = -100;// 摄像机Y轴位置
         float ViewPositionZ = 600.0f;// 摄像机Z轴位置
@@ -29,7 +30,6 @@ namespace DirectX9Demo
         float MouseXold;
         float MouseYold;
 
-        int MouseDeltaOld;// 鼠标滚轮制动器转动次数
         float XScale = 1;// 模型缩放
 
         /// <summary>
@@ -116,7 +116,8 @@ namespace DirectX9Demo
             XDevice.RenderState.Ambient = Color.Black;
             XDevice.Lights[0].Type = LightType.Directional;
             XDevice.Lights[0].Diffuse = Color.AntiqueWhite;
-            XDevice.Lights[0].Direction = new Vector3(0, 1, 0);
+            XDevice.Lights[0].Specular = Color.White;
+            XDevice.Lights[0].Direction = new Vector3(1, -1, 0);
             XDevice.Lights[0].Update();
             XDevice.Lights[0].Enabled = true;
         }
@@ -127,6 +128,8 @@ namespace DirectX9Demo
             MouseXold = panel_Disp.Width / 2;
             MouseYold = panel_Disp.Height / 2;
             panel_Disp.MouseWheel += new MouseEventHandler(Panel_MouseWheelEvent);
+            panel_Disp.Width = this.Width - panel_Disp.Location.X - 40;
+            panel_Disp.Height = this.Height - panel_Disp.Location.Y - 60;
         }
         /// <summary>
         /// 菜单项点击处理
@@ -144,8 +147,8 @@ namespace DirectX9Demo
                 XScale = 1;
                 
                 if (XDevice == null) InitializeGraphics();
-                
-                LoadMesh(openFileDialog_XFile.FileName);
+                XObjectFilePath = openFileDialog_XFile.FileName;
+                LoadMesh(XObjectFilePath);
                 XDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.White, 1.0f, 1);
                 SetCamera();
                 XDevice.Present();
@@ -168,8 +171,32 @@ namespace DirectX9Demo
                 if (Math.Abs(e.X - MouseXold) < 50 && Math.Abs(e.Y - MouseYold) < 50)
                 {
                     ViewAngleX -= 0.01f * (e.X - MouseXold);
-                    ViewAngleY += 0.01f * (e.Y - MouseYold);
+                    if (ViewAngleX > 0)
+                    {
+                        if ((ViewAngleX / Math.PI) % 2 == 0)
+                        {
+                            ViewAngleY += 0.01f * (e.Y - MouseYold);
+                        }
+                        else
+                        {
+                            ViewAngleY -= 0.01f * (e.Y - MouseYold);
+                        }
+                    }
+                    else
+                    {
+                        if ((ViewAngleX / Math.PI) % 2 == 0)
+                        {
+                            ViewAngleY -= 0.01f * (e.Y - MouseYold);
+                        }
+                        else
+                        {
+                            ViewAngleY += 0.01f * (e.Y - MouseYold);
+                        }
+                    }
                 }
+                label_ViewAngleX.Text = "ViewAngleX : " + ViewAngleX;
+                label_ViewAngleY.Text = "ViewAngleY : " + ViewAngleY;
+                Application.DoEvents();
                 MouseXold = e.X;
                 MouseYold = e.Y;
                 Render();
@@ -201,6 +228,29 @@ namespace DirectX9Demo
             XDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
             XDevice.EndScene();
             XDevice.Present();
+        }
+        /// <summary>
+        /// 使显示区域与窗体同步
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Form1_SizeChanged(object sender, EventArgs e)
+        {
+            panel_Disp.Width = this.Width - panel_Disp.Location.X - 40;
+            panel_Disp.Height = this.Height - panel_Disp.Location.Y - 60;
+
+            if (XDevice == null) InitializeGraphics();
+            XObjectFilePath = openFileDialog_XFile.FileName;
+            LoadMesh(XObjectFilePath);
+            XDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.White, 1.0f, 1);
+            SetCamera();
+            XDevice.Present();
+            XDevice.BeginScene();
+            DrawMesh();
+            XDevice.EndScene();
+
+            XDevice.Present();
+            //Render();
         }
     }
 }
