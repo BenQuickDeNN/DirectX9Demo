@@ -57,7 +57,7 @@
             // toolStripMenuItem_File_Open
             // 
             this.toolStripMenuItem_File_Open.Name = "toolStripMenuItem_File_Open";
-            this.toolStripMenuItem_File_Open.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem_File_Open.Size = new System.Drawing.Size(109, 22);
             this.toolStripMenuItem_File_Open.Text = "打开...";
             this.toolStripMenuItem_File_Open.Click += new System.EventHandler(this.MenuItemClickEventHandler);
             // 
@@ -72,6 +72,7 @@
             this.panel_Disp.Name = "panel_Disp";
             this.panel_Disp.Size = new System.Drawing.Size(759, 520);
             this.panel_Disp.TabIndex = 1;
+            this.panel_Disp.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Panel_MouseMove);
             // 
             // Form1
             // 

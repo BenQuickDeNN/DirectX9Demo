@@ -18,6 +18,19 @@ namespace DirectX9Demo
         Device XDevice = null;// X显示设备
         Material[] XObjectMeshMaterials;// X文件材质
         Texture[] XObjectMeshTextures;// X文件纹理
+        float ViewPositionX = -400;// 摄像机X轴位置
+        float ViewPositionY = -100;// 摄像机Y轴位置
+        float ViewPositionZ = 600.0f;// 摄像机Z轴位置
+
+        float ViewAngleX = 0;
+        float ViewAngleY = 0;
+        float ViewAngleZ = 0;
+
+        float MouseXold;
+        float MouseYold;
+
+        int MouseDeltaOld;// 鼠标滚轮制动器转动次数
+        float XScale = 1;// 模型缩放
 
         /// <summary>
         /// 初始化图形设备
@@ -78,10 +91,11 @@ namespace DirectX9Demo
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        void DrawMesh(float yaw, float pitch, float roll, float x, float y, float z)
+        void DrawMesh()
         {
             if (XDevice == null) return;
-            XDevice.Transform.World = Matrix.RotationYawPitchRoll(yaw, pitch, roll) * Matrix.Translation(x, y, z);
+            XDevice.Transform.World = Matrix.RotationYawPitchRoll(ViewAngleX, ViewAngleY, ViewAngleZ) * Matrix.Translation(0, -40.0f, 0) * Matrix.Scaling(XScale, XScale, XScale); ;
+            
             // 绘制
             for (int i = 0; i < XObjectMeshMaterials.Length; i++)
             {
@@ -97,7 +111,8 @@ namespace DirectX9Demo
         {
             if (XDevice == null) return;
             XDevice.Transform.Projection = Matrix.PerspectiveFovLH((float)Math.PI / 12, this.Width / this.Height, 0.80f, 10000.0f);
-            XDevice.Transform.View = Matrix.LookAtLH(new Vector3(-400, -100, 600.0f), new Vector3(), new Vector3(0, 1, 0));
+            XDevice.Transform.View = Matrix.LookAtLH(new Vector3(ViewPositionX, ViewPositionY, ViewPositionZ),
+                new Vector3(), new Vector3(0, 1, 0));
             XDevice.RenderState.Ambient = Color.Black;
             XDevice.Lights[0].Type = LightType.Directional;
             XDevice.Lights[0].Diffuse = Color.AntiqueWhite;
@@ -109,7 +124,9 @@ namespace DirectX9Demo
         public Form1()
         {
             InitializeComponent();
-            
+            MouseXold = panel_Disp.Width / 2;
+            MouseYold = panel_Disp.Height / 2;
+            panel_Disp.MouseWheel += new MouseEventHandler(Panel_MouseWheelEvent);
         }
         /// <summary>
         /// 菜单项点击处理
@@ -124,6 +141,8 @@ namespace DirectX9Demo
         {
             if (openFileDialog_XFile.ShowDialog() == DialogResult.OK)
             {
+                XScale = 1;
+                
                 if (XDevice == null) InitializeGraphics();
                 
                 LoadMesh(openFileDialog_XFile.FileName);
@@ -131,12 +150,57 @@ namespace DirectX9Demo
                 SetCamera();
                 XDevice.Present();
                 XDevice.BeginScene();
-                float angle = 0.0f;
-                DrawMesh(angle / (float)Math.PI, angle / (float)Math.PI * 2.0f, angle / (float)Math.PI / 10.0f, 0.0f, -40.0f, 0.0f);
+                DrawMesh();
                 XDevice.EndScene();
 
                 XDevice.Present();
             }
+        }
+        /// <summary>
+        /// 鼠标拖动事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Panel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (Math.Abs(e.X - MouseXold) < 50 && Math.Abs(e.Y - MouseYold) < 50)
+                {
+                    ViewAngleX -= 0.01f * (e.X - MouseXold);
+                    ViewAngleY += 0.01f * (e.Y - MouseYold);
+                }
+                MouseXold = e.X;
+                MouseYold = e.Y;
+                Render();
+            }
+        }
+        /// <summary>
+        /// 鼠标滚轮事件，用来做缩放
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Panel_MouseWheelEvent(object sender, MouseEventArgs e)
+        {
+            //MouseDeltaOld = e.Delta;
+            XScale += (0.001f * e.Delta);
+            if (XScale > 8) XScale = 8;
+            if (XScale < 0.2f) XScale = 0.2f;
+            Render();
+        }
+        /// <summary>
+        /// 渲染
+        /// </summary>
+        public void Render()
+        {
+            if (XDevice == null) return;
+            XDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.White, 1.0f, 1);
+            SetCamera();
+            DrawMesh();
+            XDevice.BeginScene();
+            XDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
+            XDevice.EndScene();
+            XDevice.Present();
         }
     }
 }
